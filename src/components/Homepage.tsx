@@ -1,6 +1,14 @@
-import { Code2, Github, Globe, Terminal } from 'lucide-react'
-import React, { useState, useEffect } from 'react'
-import { projects } from '../constants/Projects'
+import {
+  Code2,
+  ExternalLink,
+  FileArchive,
+  GitGraph,
+  Github,
+  Globe,
+  Terminal,
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { activeProjects, projects } from '../constants/Projects'
 import fortunes from '../constants/fortune-cookie.json'
 
 const Cowsay = ({ text }: { text: string }) => {
@@ -77,6 +85,48 @@ const HomePage = () => {
             <span>active_projects/</span>
           </h2>
           <div className="grid gap-4">
+            {activeProjects.length === 0 && (
+              <p className="text-[#F8F8F2]">No projects found.</p>
+            )}
+            {activeProjects.length >= 1 &&
+              activeProjects.map((project) => (
+                <div
+                  key={project.name}
+                  className="border border-[#44475A] p-4 hover:bg-[#44475A]"
+                >
+                  <h3 className="text-xl mb-2 text-[#FF79C6] flex align-middle items-center">
+                    $ {project.name}
+                    {project.url && (
+                      <a
+                        href={project?.url || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink size={18} className="ml-2" />
+                      </a>
+                    )}
+                    {project?.source && (
+                      <a
+                        href={project.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <GitGraph size={18} className="ml-2" />
+                      </a>
+                    )}
+                  </h3>
+                  <p className="text-[#F8F8F2] ml-4">{project.desc}</p>
+                </div>
+              ))}
+          </div>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl mb-4 flex items-center text-[#50FA7B]">
+            <FileArchive className="mr-2" />
+            <span>past_projects/</span>
+          </h2>
+          <div className="grid gap-4">
             {projects.length === 0 && (
               <p className="text-[#F8F8F2]">No projects found.</p>
             )}
@@ -86,8 +136,26 @@ const HomePage = () => {
                   key={project.name}
                   className="border border-[#44475A] p-4 hover:bg-[#44475A]"
                 >
-                  <h3 className="text-xl mb-2 text-[#FF79C6]">
+                  <h3 className="text-xl mb-2 text-[#FF79C6] flex align-middle items-center">
                     $ {project.name}
+                    {project.url && (
+                      <a
+                        href={project?.url || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink size={18} className="ml-2" />
+                      </a>
+                    )}
+                    {project?.source && (
+                      <a
+                        href={project.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <GitGraph size={18} className="ml-2" />
+                      </a>
+                    )}
                   </h3>
                   <p className="text-[#F8F8F2] ml-4">{project.desc}</p>
                 </div>
@@ -98,7 +166,7 @@ const HomePage = () => {
         <section>
           <h2 className="text-2xl mb-4 flex items-center text-[#50FA7B]">
             <Terminal className="mr-2" />
-            <span>connect/</span>
+            <span>more/</span>
           </h2>
           <div className="flex gap-4">
             <a
