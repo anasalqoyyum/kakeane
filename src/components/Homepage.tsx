@@ -3,16 +3,14 @@ import {
   ExternalLink,
   FileArchive,
   GitGraph,
-  Github,
   Globe,
   Terminal,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { activeProjects, projects } from '../constants/Projects'
 import fortunes from '../constants/fortune-cookie.json'
 
 const Cowsay = ({ text }: { text: string }) => {
-  const bubbleWidth = Math.min(40, text.length + 4)
+  const bubbleWidth = Math.min(20, text.length + 4)
   // wrap text at spaces
   const wrapText = (text: string, maxWidth: number): string[] => {
     const words = text.split(' ')
@@ -38,11 +36,11 @@ const Cowsay = ({ text }: { text: string }) => {
 
   return (
     <pre className="text-[#BD93F9]">
-      {` ${'_'.repeat(bubbleWidth + 2)}\n`}
+      {` ${'-'.repeat(bubbleWidth + 4)}\n`}
       {lines
         .map((line, _) => ` < ${line.padEnd(bubbleWidth, ' ')} >\n`)
         .join('')}
-      {` ${'‾'.repeat(bubbleWidth + 2)}\n`}
+      {` ${'-'.repeat(bubbleWidth + 4)}\n`}
       {'        \\   ^__^\n'}
       {'         \\  (oo)\\_______\n'}
       {'            (__)\\       )\\/\\\n'}
@@ -53,18 +51,13 @@ const Cowsay = ({ text }: { text: string }) => {
 }
 
 const HomePage = () => {
-  const [fortune, setFortune] = useState(fortunes[0])
-
-  useEffect(() => {
-    const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)]
-    setFortune(randomFortune)
-  }, [])
+  const fortune = fortunes[Math.floor(Math.random() * fortunes.length)]
 
   return (
     <div className="min-h-screen bg-[#282A36] text-[#F8F8F2] p-8 font-mono">
       <header className="mb-12">
         <h1 className="text-4xl mb-2 text-[#FF79C6]">~/kakeane-projects</h1>
-        <p className="text-[#BD93F9]">$ cat description.md</p>
+        <p className="text-[#BD93F9] py-2">$ cat description.md</p>
         <div className="ml-4 space-y-2">
           <p>
             Welcome to kakekane playground - a space where I document various
@@ -74,7 +67,7 @@ const HomePage = () => {
             Here you'll find proof-of-concepts, tools in development, and
             half-baked ideas turned into (hopefully)-working prototypes.
           </p>
-          <p>nb. kakekane means "disappointment"</p>
+          <p>nb. kakekane means "disappointment".</p>
         </div>
       </header>
 
@@ -86,7 +79,7 @@ const HomePage = () => {
           </h2>
           <div className="grid gap-4">
             {activeProjects.length === 0 && (
-              <p className="text-[#F8F8F2]">No projects found.</p>
+              <p className="text-[#F8F8F2]">No active projects found.</p>
             )}
             {activeProjects.length >= 1 &&
               activeProjects.map((project) => (
@@ -101,21 +94,25 @@ const HomePage = () => {
                         href={project?.url || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="ml-2 hover:border-b hover:border-b-[#FF79C6] pb-0.5"
                       >
-                        <ExternalLink size={18} className="ml-2" />
-                      </a>
-                    )}
-                    {project?.source && (
-                      <a
-                        href={project.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <GitGraph size={18} className="ml-2" />
+                        <ExternalLink size={16} />
                       </a>
                     )}
                   </h3>
                   <p className="text-[#F8F8F2] ml-4">{project.desc}</p>
+                  {project?.source && (
+                    <p className="mt-3">
+                      <a
+                        href={project.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-4 hover:border-b hover:border-b-[#FF79C6] pb-0.5 text-[#FF79C6]"
+                      >
+                        Source
+                      </a>
+                    </p>
+                  )}
                 </div>
               ))}
           </div>
@@ -124,7 +121,7 @@ const HomePage = () => {
         <section className="mb-8">
           <h2 className="text-2xl mb-4 flex items-center text-[#50FA7B]">
             <FileArchive className="mr-2" />
-            <span>past_projects/</span>
+            <span>archived_projects/</span>
           </h2>
           <div className="grid gap-4">
             {projects.length === 0 && (
@@ -143,21 +140,25 @@ const HomePage = () => {
                         href={project?.url || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="ml-2 hover:border-b hover:border-b-[#FF79C6] pb-0.5"
                       >
-                        <ExternalLink size={18} className="ml-2" />
-                      </a>
-                    )}
-                    {project?.source && (
-                      <a
-                        href={project.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <GitGraph size={18} className="ml-2" />
+                        <ExternalLink size={16} />
                       </a>
                     )}
                   </h3>
                   <p className="text-[#F8F8F2] ml-4">{project.desc}</p>
+                  {project?.source && (
+                    <p className="mt-3">
+                      <a
+                        href={project.source}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-4 hover:border-b hover:border-b-[#FF79C6] pb-0.5 text-[#FF79C6]"
+                      >
+                        Source
+                      </a>
+                    </p>
+                  )}
                 </div>
               ))}
           </div>
@@ -175,8 +176,8 @@ const HomePage = () => {
               rel="noopener noreferrer"
               className="flex items-center hover:text-[#FF79C6]"
             >
-              <Globe className="mr-2" />
-              <span>website</span>
+              <Globe className="mr-2" size={20} />
+              <span>main_site</span>
             </a>
             <a
               href="https://github.com/anasalqoyyum"
@@ -184,7 +185,7 @@ const HomePage = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Github className="mr-2" />
+              <GitGraph className="mr-2" size={20} />
               <span>github</span>
             </a>
           </div>
