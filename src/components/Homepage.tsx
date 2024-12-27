@@ -8,9 +8,14 @@ import {
 } from 'lucide-react'
 import { activeProjects, projects } from '../constants/Projects'
 import fortunes from '../constants/fortune-cookie.json'
+import { useState, useEffect } from 'react'
+
+interface Props {
+  ran: number
+}
 
 const Cowsay = ({ text }: { text: string }) => {
-  const bubbleWidth = Math.min(20, text.length + 4)
+  const bubbleWidth = Math.min(25, text.length + 4)
   // wrap text at spaces
   const wrapText = (text: string, maxWidth: number): string[] => {
     const words = text.split(' ')
@@ -50,13 +55,18 @@ const Cowsay = ({ text }: { text: string }) => {
   )
 }
 
-const HomePage = () => {
-  const fortune = fortunes[Math.floor(Math.random() * fortunes.length)]
+export const HomePage = ({ ran }: Props) => {
+  const [fortune, setFortune] = useState(fortunes[ran])
+
+  useEffect(() => {
+    const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)]
+    setFortune(randomFortune)
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#282A36] text-[#F8F8F2] p-8 font-mono">
       <header className="mb-12">
-        <h1 className="text-4xl mb-2 text-[#FF79C6]">~/kakeane-projects</h1>
+        <h1 className="text-4xl mb-2 text-[#FF79C6]">~/kakekane-projects</h1>
         <p className="text-[#BD93F9] py-2">$ cat description.md</p>
         <div className="ml-4 space-y-2">
           <p>
@@ -199,5 +209,3 @@ const HomePage = () => {
     </div>
   )
 }
-
-export default HomePage

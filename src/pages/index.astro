@@ -1,8 +1,11 @@
 ---
-import HomePage from '../components/Homepage'
+import { HomePage } from '../components/Homepage'
 import Layout from '../layouts/Layout.astro'
+import fortuneJSON from '../constants/fortune-cookie.json'
+
+const randomNumber = Math.floor(Math.random() * fortuneJSON.length)
 ---
 
 <Layout>
-    <HomePage client:load />
+  <HomePage client:load ran={randomNumber} />
 </Layout>
