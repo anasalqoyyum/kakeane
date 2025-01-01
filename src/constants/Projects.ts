@@ -30,4 +30,9 @@ export const activeProjects: Project[] = [
     desc: "OBS Auto Scene Switcher for Konami's Sound Voltex (Arcade & Konasute) using WebSocket to explore OBS WebSocket Plugin.",
     source: 'https://github.com/anasalqoyyum/konasute-autoscener',
   },
+  {
+    name: 'Ansible as a (reproducable) workstation environment',
+    desc: 'Ansible playbook to setup new workstation (Mac & Linux) with all the necessary tools and configurations that I needed.',
+    source: 'https://github.com/anasalqoyyum/ansible',
+  },
 ]
