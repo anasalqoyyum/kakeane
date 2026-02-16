@@ -26,6 +26,11 @@ export const projects: Project[] = [
 
 export const activeProjects: Project[] = [
   {
+    name: 'msr-archiver',
+    desc: 'Archive Arknights OSTs from monster-siren.hypergryph.com with album/song metadata, cover art, lyrics, and WAV-to-FLAC conversion using FFMPEG.',
+    source: 'https://github.com/anasalqoyyum/msr-archiver',
+  },
+  {
     name: 'konasute-autoscener',
     desc: "OBS Auto Scene Switcher for Konami's Sound Voltex (Arcade & Konasute) using WebSocket to explore OBS WebSocket Plugin.",
     source: 'https://github.com/anasalqoyyum/konasute-autoscener',
