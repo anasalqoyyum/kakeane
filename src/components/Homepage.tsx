@@ -1,11 +1,3 @@
-import {
-  Code2,
-  ExternalLink,
-  FileArchive,
-  GitGraph,
-  Globe,
-  Terminal,
-} from 'lucide-react'
 import { activeProjects, projects } from '../constants/Projects'
 import fortunes from '../constants/fortune-cookie.json'
 import { useState, useEffect } from 'react'
@@ -14,45 +6,36 @@ interface Props {
   ran: number
 }
 
-const Cowsay = ({ text }: { text: string }) => {
-  const bubbleWidth = Math.min(25, text.length + 4)
-  // wrap text at spaces
-  const wrapText = (text: string, maxWidth: number): string[] => {
-    const words = text.split(' ')
-    const lines: string[] = []
-    let currentLine = ''
+function generateCowsay(text: string): string {
+  const maxWidth = 46
+  const words = text.split(' ')
+  const lines: string[] = []
+  let currentLine = ''
 
-    for (const word of words) {
-      if ((currentLine + word).length > maxWidth) {
-        lines.push(currentLine.trim())
-        currentLine = ''
-      }
-      currentLine += `${word} `
+  for (const word of words) {
+    if ((currentLine + ' ' + word).trim().length <= maxWidth) {
+      currentLine = (currentLine + ' ' + word).trim()
+    } else {
+      if (currentLine) lines.push(currentLine)
+      currentLine = word
     }
-
-    if (currentLine.trim().length > 0) {
-      lines.push(currentLine.trim())
-    }
-
-    return lines
   }
+  if (currentLine) lines.push(currentLine)
 
-  const lines = wrapText(text, bubbleWidth)
+  const maxLen = Math.max(...lines.map((l) => l.length))
+  const bar = `+${'-'.repeat(maxLen + 2)}+`
+  const rows = [bar]
+  for (const line of lines) {
+    rows.push(`| ${line.padEnd(maxLen)} |`)
+  }
+  rows.push(bar)
+  rows.push('        \\   ^__^')
+  rows.push('         \\  (oo)\\_______')
+  rows.push('            (__)\\       )\\/')
+  rows.push('                ||----w |')
+  rows.push('                ||     ||')
 
-  return (
-    <pre className="text-[#BD93F9]">
-      {` ${'-'.repeat(bubbleWidth + 4)}\n`}
-      {lines
-        .map((line, _) => ` < ${line.padEnd(bubbleWidth, ' ')} >\n`)
-        .join('')}
-      {` ${'-'.repeat(bubbleWidth + 4)}\n`}
-      {'        \\   ^__^\n'}
-      {'         \\  (oo)\\_______\n'}
-      {'            (__)\\       )\\/\\\n'}
-      {'                ||----w |\n'}
-      {'                ||     ||\n'}
-    </pre>
-  )
+  return rows.join('\n')
 }
 
 export const HomePage = ({ ran }: Props) => {
@@ -64,148 +47,169 @@ export const HomePage = ({ ran }: Props) => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#282A36] text-[#F8F8F2] p-8 font-mono">
-      <header className="mb-12">
-        <h1 className="text-4xl mb-2 text-[#FF79C6]">~/kakekane-projects</h1>
-        <p className="text-[#BD93F9] py-2">$ cat description.md</p>
-        <div className="ml-4 space-y-2">
-          <p>
-            Welcome to kakekane playground - a space where I document various
-            experimental projects and random technical explorations.
-          </p>
-          <p>
-            Here you'll find proof-of-concepts, tools in development, and
-            half-baked ideas turned into (hopefully)-working prototypes.
-          </p>
-          <p>nb. kakekane means "disappointment".</p>
-        </div>
-      </header>
+    <div className="kk-wrapper">
 
-      <main>
-        <section className="mb-8">
-          <h2 className="text-2xl mb-4 flex items-center text-[#50FA7B]">
-            <Code2 className="mr-2" />
-            <span>active_projects/</span>
-          </h2>
-          <div className="grid gap-4">
-            {activeProjects.length === 0 && (
-              <p className="text-[#F8F8F2]">No active projects found.</p>
-            )}
-            {activeProjects.length >= 1 &&
-              activeProjects.map((project) => (
-                <div
-                  key={project.name}
-                  className="border border-[#44475A] p-4 hover:bg-[#44475A]"
-                >
-                  <h3 className="text-xl mb-2 text-[#FF79C6] flex align-middle items-center">
-                    $ {project.name}
-                    {project.url && (
-                      <a
-                        href={project?.url || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2 hover:border-b hover:border-b-[#FF79C6] pb-0.5"
-                      >
-                        <ExternalLink size={16} />
-                      </a>
-                    )}
-                  </h3>
-                  <p className="text-[#F8F8F2] ml-4">{project.desc}</p>
-                  {project?.source && (
-                    <p className="mt-3">
-                      <a
-                        href={project.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-4 hover:border-b hover:border-b-[#FF79C6] pb-0.5 text-[#FF79C6]"
-                      >
-                        Source
-                      </a>
-                    </p>
-                  )}
-                </div>
-              ))}
-          </div>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl mb-4 flex items-center text-[#50FA7B]">
-            <FileArchive className="mr-2" />
-            <span>archived_projects/</span>
-          </h2>
-          <div className="grid gap-4">
-            {projects.length === 0 && (
-              <p className="text-[#F8F8F2]">No projects found.</p>
-            )}
-            {projects.length >= 1 &&
-              projects.map((project) => (
-                <div
-                  key={project.name}
-                  className="border border-[#44475A] p-4 hover:bg-[#44475A]"
-                >
-                  <h3 className="text-xl mb-2 text-[#FF79C6] flex align-middle items-center">
-                    $ {project.name}
-                    {project.url && (
-                      <a
-                        href={project?.url || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2 hover:border-b hover:border-b-[#FF79C6] pb-0.5"
-                      >
-                        <ExternalLink size={16} />
-                      </a>
-                    )}
-                  </h3>
-                  <p className="text-[#F8F8F2] ml-4">{project.desc}</p>
-                  {project?.source && (
-                    <p className="mt-3">
-                      <a
-                        href={project.source}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-4 hover:border-b hover:border-b-[#FF79C6] pb-0.5 text-[#FF79C6]"
-                      >
-                        Source
-                      </a>
-                    </p>
-                  )}
-                </div>
-              ))}
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl mb-4 flex items-center text-[#50FA7B]">
-            <Terminal className="mr-2" />
-            <span>more/</span>
-          </h2>
-          <div className="flex gap-4">
+      {/* ── Nav ─────────────────────────────────────────── */}
+      <nav className="kk-nav">
+        <span className="kk-nav-brand">
+          <span className="tilde">~</span>/kakeane-projects
+        </span>
+        <ul className="kk-nav-links">
+          <li>
             <a
               href="https://anasalqoyyum.dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center hover:text-[#FF79C6]"
+              className="kk-nav-link"
             >
-              <Globe className="mr-2" size={20} />
-              <span>main_site</span>
+              site ↗
             </a>
+          </li>
+          <li>
             <a
               href="https://github.com/anasalqoyyum"
-              className="flex items-center hover:text-[#FF79C6]"
               target="_blank"
               rel="noopener noreferrer"
+              className="kk-nav-link"
             >
-              <GitGraph className="mr-2" size={20} />
-              <span>github</span>
+              github ↗
             </a>
-          </div>
-        </section>
-      </main>
+          </li>
+        </ul>
+      </nav>
 
-      <footer className="mt-12 pt-8 border-t border-[#44475A]">
-        <p className="text-[#BD93F9]">$ fortune | cowsay</p>
-        <Cowsay text={fortune} />
-      </footer>
+      {/* ── Hero ────────────────────────────────────────── */}
+      <section className="kk-hero">
+        <h1 className="kk-hero-title">
+          PROJECTS<span className="kk-dot">.</span>
+        </h1>
+        <p className="kk-hero-desc">
+          A playground for tools, experiments, and whatever seems interesting enough to build.
+          <em className="kk-hero-note">nb. kakane means "disappointment".</em>
+        </p>
+      </section>
+
+      {/* ── Active Projects ─────────────────────────────── */}
+      <section className="kk-section">
+        <div className="kk-section-head">
+          <span className="kk-section-num">01</span>
+          <div className="kk-section-rule" />
+          <span className="kk-section-label">active_projects</span>
+        </div>
+        <div className="kk-projects">
+          {activeProjects.map((project) => (
+            <div className="kk-project" key={project.name}>
+              <div>
+                <div className="kk-project-name">{project.name}</div>
+                <div className="kk-project-desc">{project.desc}</div>
+              </div>
+              <div className="kk-project-actions">
+                {project.url && (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="kk-action"
+                  >
+                    live ↗
+                  </a>
+                )}
+                {project.source && (
+                  <a
+                    href={project.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="kk-action"
+                  >
+                    src ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Archived Projects ───────────────────────────── */}
+      <section className="kk-section">
+        <div className="kk-section-head">
+          <span className="kk-section-num">02</span>
+          <div className="kk-section-rule" />
+          <span className="kk-section-label">archived_projects</span>
+        </div>
+        <div className="kk-projects">
+          {projects.map((project) => (
+            <div className="kk-project" key={project.name}>
+              <div>
+                <div className="kk-project-name">{project.name}</div>
+                <div className="kk-project-desc">{project.desc}</div>
+              </div>
+              <div className="kk-project-actions">
+                {project.url && (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="kk-action"
+                  >
+                    live ↗
+                  </a>
+                )}
+                {project.source && (
+                  <a
+                    href={project.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="kk-action"
+                  >
+                    src ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── More ────────────────────────────────────────── */}
+      <section className="kk-section">
+        <div className="kk-section-head">
+          <span className="kk-section-num">03</span>
+          <div className="kk-section-rule" />
+          <span className="kk-section-label">more</span>
+        </div>
+        <div className="kk-links">
+          <a
+            href="https://anasalqoyyum.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="kk-link"
+          >
+            <span className="kk-link-name">main_site</span>
+            <div className="kk-link-dots" />
+            <span className="kk-link-url">anasalqoyyum.dev ↗</span>
+          </a>
+          <a
+            href="https://github.com/anasalqoyyum"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="kk-link"
+          >
+            <span className="kk-link-name">github</span>
+            <div className="kk-link-dots" />
+            <span className="kk-link-url">github.com/anasalqoyyum ↗</span>
+          </a>
+        </div>
+      </section>
+
+      {/* ── Fortune ─────────────────────────────────────── */}
+      <div className="kk-fortune">
+        <div className="kk-fortune-cmd">fortune | cowsay</div>
+        {fortune && (
+          <pre className="kk-fortune-text">{generateCowsay(fortune)}</pre>
+        )}
+      </div>
+
     </div>
   )
 }
