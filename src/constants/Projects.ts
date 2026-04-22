@@ -26,6 +26,11 @@ export const projects: Project[] = [
 
 export const activeProjects: Project[] = [
   {
+    name: 'ai-drew-toolbar',
+    desc: 'Browser extension that lets developers inspect a live web app, select a UI element, and copy the relevant code context such as file paths, component names, and HTML structure for use with AI coding tools like Cursor, Claude Code, and GitHub Copilot.',
+    source: 'https://github.com/anasalqoyyum/ai-drew-toolbar',
+  },
+  {
     name: 'msr-archiver',
     desc: 'Archive Arknights OSTs from monster-siren.hypergryph.com with album/song metadata, cover art, lyrics, and WAV-to-FLAC conversion using FFMPEG.',
     source: 'https://github.com/anasalqoyyum/msr-archiver',
