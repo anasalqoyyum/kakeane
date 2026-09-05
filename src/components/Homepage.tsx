@@ -1,9 +1,14 @@
-import { activeProjects, projects } from '../constants/Projects'
+import { useEffect, useState } from 'react'
 import fortunes from '../constants/fortune-cookie.json'
-import { useState, useEffect } from 'react'
+import { activeProjects, projects } from '../constants/Projects'
+import type { Project } from '../constants/Projects'
 
 interface Props {
   ran: number
+}
+
+interface ProjectListProps {
+  items: readonly Project[]
 }
 
 function generateCowsay(text: string): string {
@@ -20,14 +25,17 @@ function generateCowsay(text: string): string {
       currentLine = word
     }
   }
+
   if (currentLine) lines.push(currentLine)
 
-  const maxLen = Math.max(...lines.map((l) => l.length))
+  const maxLen = Math.max(...lines.map(line => line.length))
   const bar = `+${'-'.repeat(maxLen + 2)}+`
   const rows = [bar]
+
   for (const line of lines) {
     rows.push(`| ${line.padEnd(maxLen)} |`)
   }
+
   rows.push(bar)
   rows.push('        \\   ^__^')
   rows.push('         \\  (oo)\\_______')
@@ -38,6 +46,44 @@ function generateCowsay(text: string): string {
   return rows.join('\n')
 }
 
+const ProjectList = ({ items }: ProjectListProps) => (
+  <ul className="project-list">
+    {items.map(project => (
+      <li className="project-entry" key={project.name}>
+        <div>
+          <h3 className="project-name">{project.name}</h3>
+          <p className="project-desc">{project.desc}</p>
+        </div>
+
+        <div className="project-actions">
+          {project.url ? (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-action"
+              aria-label={`Visit ${project.name}`}
+            >
+              live ↗
+            </a>
+          ) : null}
+          {project.source ? (
+            <a
+              href={project.source}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-action"
+              aria-label={`View ${project.name} source`}
+            >
+              source ↗
+            </a>
+          ) : null}
+        </div>
+      </li>
+    ))}
+  </ul>
+)
+
 export const HomePage = ({ ran }: Props) => {
   const [fortune, setFortune] = useState(fortunes[ran])
 
@@ -47,22 +93,51 @@ export const HomePage = ({ ran }: Props) => {
   }, [])
 
   return (
-    <div className="kk-wrapper">
+    <div className="kakeane-home">
+      <header className="kakeane-hero">
+        <h1>
+          Projects<span aria-hidden="true">.</span>
+        </h1>
+        <p>
+          A playground for tools, experiments, and whatever seems interesting
+          enough to build.
+          <em>nb. kakane means "disappointment".</em>
+        </p>
+      </header>
 
-      {/* ── Nav ─────────────────────────────────────────── */}
-      <nav className="kk-nav">
-        <span className="kk-nav-brand">
-          <span className="tilde">~</span>/kakeane-projects
-        </span>
-        <ul className="kk-nav-links">
+      <section
+        className="kakeane-section"
+        aria-labelledby="active-projects-heading"
+      >
+        <h2 id="active-projects-heading" className="terminal-label">
+          Active projects
+        </h2>
+        <ProjectList items={activeProjects} />
+      </section>
+
+      <section
+        className="kakeane-section"
+        aria-labelledby="archived-projects-heading"
+      >
+        <h2 id="archived-projects-heading" className="terminal-label">
+          Archived projects
+        </h2>
+        <ProjectList items={projects} />
+      </section>
+
+      <section className="kakeane-section" aria-labelledby="more-heading">
+        <h2 id="more-heading" className="terminal-label">
+          More
+        </h2>
+        <ul className="more-list">
           <li>
             <a
               href="https://anasalqoyyum.dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="kk-nav-link"
             >
-              site ↗
+              <span>main site</span>
+              <span>anasalqoyyum.dev ↗</span>
             </a>
           </li>
           <li>
@@ -70,146 +145,29 @@ export const HomePage = ({ ran }: Props) => {
               href="https://github.com/anasalqoyyum"
               target="_blank"
               rel="noopener noreferrer"
-              className="kk-nav-link"
             >
-              github ↗
+              <span>GitHub</span>
+              <span>github.com/anasalqoyyum ↗</span>
             </a>
           </li>
         </ul>
-      </nav>
-
-      {/* ── Hero ────────────────────────────────────────── */}
-      <section className="kk-hero">
-        <h1 className="kk-hero-title">
-          PROJECTS<span className="kk-dot">.</span>
-        </h1>
-        <p className="kk-hero-desc">
-          A playground for tools, experiments, and whatever seems interesting enough to build.
-          <em className="kk-hero-note">nb. kakane means "disappointment".</em>
-        </p>
       </section>
 
-      {/* ── Active Projects ─────────────────────────────── */}
-      <section className="kk-section">
-        <div className="kk-section-head">
-          <span className="kk-section-num">01</span>
-          <div className="kk-section-rule" />
-          <span className="kk-section-label">active_projects</span>
+      <section className="fortune-section" aria-labelledby="fortune-heading">
+        <div className="fortune-heading">
+          <h2 id="fortune-heading" className="terminal-label">
+            fortune | cowsay
+          </h2>
+          <span>random output</span>
         </div>
-        <div className="kk-projects">
-          {activeProjects.map((project) => (
-            <div className="kk-project" key={project.name}>
-              <div>
-                <div className="kk-project-name">{project.name}</div>
-                <div className="kk-project-desc">{project.desc}</div>
-              </div>
-              <div className="kk-project-actions">
-                {project.url && (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="kk-action"
-                  >
-                    live ↗
-                  </a>
-                )}
-                {project.source && (
-                  <a
-                    href={project.source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="kk-action"
-                  >
-                    src ↗
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Archived Projects ───────────────────────────── */}
-      <section className="kk-section">
-        <div className="kk-section-head">
-          <span className="kk-section-num">02</span>
-          <div className="kk-section-rule" />
-          <span className="kk-section-label">archived_projects</span>
-        </div>
-        <div className="kk-projects">
-          {projects.map((project) => (
-            <div className="kk-project" key={project.name}>
-              <div>
-                <div className="kk-project-name">{project.name}</div>
-                <div className="kk-project-desc">{project.desc}</div>
-              </div>
-              <div className="kk-project-actions">
-                {project.url && (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="kk-action"
-                  >
-                    live ↗
-                  </a>
-                )}
-                {project.source && (
-                  <a
-                    href={project.source}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="kk-action"
-                  >
-                    src ↗
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── More ────────────────────────────────────────── */}
-      <section className="kk-section">
-        <div className="kk-section-head">
-          <span className="kk-section-num">03</span>
-          <div className="kk-section-rule" />
-          <span className="kk-section-label">more</span>
-        </div>
-        <div className="kk-links">
-          <a
-            href="https://anasalqoyyum.dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="kk-link"
-          >
-            <span className="kk-link-name">main_site</span>
-            <div className="kk-link-dots" />
-            <span className="kk-link-url">anasalqoyyum.dev ↗</span>
-          </a>
-          <a
-            href="https://github.com/anasalqoyyum"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="kk-link"
-          >
-            <span className="kk-link-name">github</span>
-            <div className="kk-link-dots" />
-            <span className="kk-link-url">github.com/anasalqoyyum ↗</span>
-          </a>
-        </div>
-      </section>
-
-      {/* ── Fortune ─────────────────────────────────────── */}
-      <div className="kk-fortune">
-        <div className="kk-fortune-cmd">fortune | cowsay</div>
-        {fortune && (
-          <pre className="kk-fortune-text">{generateCowsay(fortune)}</pre>
+        {fortune ? (
+          <pre className="fortune-text" aria-live="polite">
+            {generateCowsay(fortune)}
+          </pre>
+        ) : (
+          <p className="fortune-empty">No fortune came back.</p>
         )}
-      </div>
-
+      </section>
     </div>
   )
 }

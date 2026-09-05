@@ -26,6 +26,11 @@ export const projects: Project[] = [
 
 export const activeProjects: Project[] = [
   {
+    name: 'pi-dalamud',
+    desc: 'A Dalamud plugin and local bridge for talking to a Pi coding agent from Final Fantasy XIV.',
+    source: 'https://github.com/anasalqoyyum/pi-dalamud',
+  },
+  {
     name: 'ai-drew-toolbar',
     desc: 'Browser extension that lets developers inspect a live web app, select a UI element, and copy the relevant code context such as file paths, component names, and HTML structure for use with AI coding tools like Cursor, Claude Code, and GitHub Copilot.',
     source: 'https://github.com/anasalqoyyum/ai-drew-toolbar',

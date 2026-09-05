@@ -1,4 +1,8 @@
 ---
+import '@fontsource/commit-mono/latin-400.css'
+import '@fontsource/commit-mono/latin-400-italic.css'
+import '@fontsource/commit-mono/latin-500.css'
+import '@fontsource/commit-mono/latin-600.css'
 import '../styles/global.css'
 ---
 
@@ -7,18 +11,59 @@ import '../styles/global.css'
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="A digital playground for experimental projects">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+    <meta
+      name="description"
+      content="A digital playground for experimental projects"
+    />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="generator" content={Astro.generator} />
-    <title>~/kakeane-projects</title>
+    <title>~/kakeane</title>
   </head>
-  <body>
-    <slot />
+  <body class="preload-transitions">
+    <a href="#content" class="skip-link">Skip to content</a>
+
+    <div class="site-shell">
+      <header class="site-header">
+        <a href="/" class="site-brand">
+          <span aria-hidden="true">~/</span>kakeane
+        </a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <ul>
+            <li>
+              <a
+                href="https://anasalqoyyum.dev"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                site ↗
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/anasalqoyyum"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                github ↗
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      <main id="content" class="site-main site-main--home">
+        <slot />
+      </main>
+    </div>
+
+    <script is:inline>
+      requestAnimationFrame(() => {
+        document.body.classList.remove('preload-transitions')
+      })
+    </script>
   </body>
 </html>
